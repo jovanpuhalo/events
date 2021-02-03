@@ -12,4 +12,4 @@ export class Administrator {
     @Column({ type: "varchar", name: "password_hash", length: 128 })
     passwordHash: string;
 
-}
+}  

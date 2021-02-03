@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataBaseConfiguration } from 'config/database';
-import { AppController } from './controllers/app.controller';
-import { AppService } from './app.service';
+import { AppController } from './app.controller';
 import { Administrator } from './entities/administrator';
 import { AdministratorService } from './services/administrator/administrator.service';
-import { AdministratorControler } from './controllers/api/administrator.controller';
+import { AdministratorController } from './controllers/api/administrator.controller';
+import { AppService } from './app.service';
+import { DataBaseConfiguration } from './config/database.configuration';
 
 @Module({
   imports: [
@@ -28,11 +28,11 @@ import { AdministratorControler } from './controllers/api/administrator.controll
   ],
   controllers: [
     AppController,
-    AdministratorControler
+    AdministratorController
   ],
   providers: [
+    AppService,
     AdministratorService
-
   ],
 })
 export class AppModule { }
