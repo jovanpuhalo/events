@@ -5,6 +5,7 @@ import { Administrator } from 'src/entities/administrator.entity';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { EditAdministratorDto } from 'src/dtos/administrator/edit.administrator.dto';
+import { ApiResponse } from 'src/misc/apiResponse';
 
 @Injectable()
 export class AdministratorService {
@@ -18,34 +19,50 @@ export class AdministratorService {
         return this.administrator.find();
     }
 
-    getById(id: number): Promise<Administrator> {
-        return this.administrator.findOne(id);
+    getById(id: number): Promise<Administrator | ApiResponse> {
+        return new Promise(async (resolve) => {
+            let admin = await this.administrator.findOne(id)
+            if (admin == undefined) {
+                resolve(new ApiResponse("error", -1002, "Can't find admin with that id"))
+            }
+            resolve(admin);
+        })
+
     }
 
-    add(data: AddAdministratorDto): Promise<Administrator> {
+    add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
         const crypto = require('crypto');
 
         const passwordHash = crypto.createHash('sha512');
-        passwordHash.updata(data.password);
+        passwordHash.update(data.password);
 
-        const passwordHashString = passwordHash.digest('hex').topUpperCase();
+        const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
         const newAdmin = new Administrator();
 
         newAdmin.username = data.username;
         newAdmin.passwordHash = passwordHashString;
 
-        return this.administrator.save(newAdmin);
+
+        return new Promise((resolve) => {
+            this.administrator.save(newAdmin)
+                .then(data => resolve(data))
+                .catch(error => {
+                    const respons: ApiResponse = new ApiResponse("error", -1001, "Can't add new administrator! You may have entered an existing username");
+                    resolve(respons);
+                })
+        })
+
     }
 
-    async editAdministratorById(id: number, data: EditAdministratorDto): Promise<Administrator> {
+    async editAdministratorById(id: number, data: EditAdministratorDto): Promise<Administrator | ApiResponse> {
         let oldadmin: Administrator = await this.administrator.findOne(id)
         const crypto = require('crypto');
 
         const passwordHash = crypto.createHash('sha512');
-        passwordHash.updata(data.password);
+        passwordHash.update(data.password);
 
-        const passwordHashString = passwordHash.digest('hex').topUpperCase();
+        const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
         const newAdmin = new Administrator();
 
