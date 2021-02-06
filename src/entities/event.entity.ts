@@ -18,16 +18,20 @@ export class Event {
     description: string;
 
     @Column({ type: "datetime" })
-    start: Date;
+    start: string;
 
     @Column({ type: "datetime" })
-    end: Date;
+    end: string;
 
     @Column({ type: "varchar", length: 64 })
     location: string;
 
-    @Column({ type: "varchar", length: 64 })
-    status: string;
+    @Column({
+        type: "enum",
+        enum: ["Scheduled", "In progress", "Closed"],
+        default: () => "'Scheduled'",
+    })
+    status: "Scheduled" | "In progress" | "Closed";
 
     @ManyToOne(() => EventType, (eventType) => eventType.events, {
         onDelete: "NO ACTION",

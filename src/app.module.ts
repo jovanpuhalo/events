@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './controllers/app.controller';
 import { Administrator } from './entities/administrator.entity';
@@ -12,6 +12,12 @@ import { Event } from './entities/event.entity';
 import { UserEvent } from './entities/user_event.entity';
 import { User } from './entities/user.entity';
 import { UserToken } from './entities/user-token.entity';
+import { EventTypeService } from './services/event-type/event.type.service';
+import { EventTypeController } from './controllers/api/event.type.controlerr';
+import { EventController } from './controllers/api/event.controller';
+import { EventService } from './services/event/event.service';
+import { AuthController } from './controllers/api/auth.controller';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -47,11 +53,25 @@ import { UserToken } from './entities/user-token.entity';
   ],
   controllers: [
     AppController,
-    AdministratorController
+    AdministratorController,
+    EventTypeController,
+    EventController,
+    AuthController
   ],
   providers: [
     AppService,
-    AdministratorService
+    AdministratorService,
+    EventTypeService,
+    EventService
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude('auth/*')
+      .forRoutes('api/*')
+  }
+
+
+}

@@ -30,6 +30,20 @@ export class AdministratorService {
 
     }
 
+    async getByUsername(username: string): Promise<Administrator | null> {
+        let admin: Administrator = await this.administrator.findOne({
+            where: {
+                username: username
+            }
+        })
+
+        if (admin) {
+            return admin;
+        }
+        return null;
+    }
+
+
     add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
         const crypto = require('crypto');
 
@@ -56,21 +70,21 @@ export class AdministratorService {
     }
 
     async editAdministratorById(id: number, data: EditAdministratorDto): Promise<Administrator | ApiResponse> {
-        let oldadmin: Administrator = await this.administrator.findOne(id)
-        const crypto = require('crypto');
+        let admin: Administrator = await this.administrator.findOne(id)
+        if (admin === undefined) {
+            return new Promise(resolve => {
+                resolve(new ApiResponse("error", -1002, "Can't find that admin"));
+            });
+        }
 
         const passwordHash = crypto.createHash('sha512');
         passwordHash.update(data.password);
-
         const passwordHashString = passwordHash.digest('hex').toUpperCase();
+        // const newAdmin = new Administrator();    
+        // newAdmin.username = oldadmin.username
+        admin.passwordHash = passwordHashString;
 
-        const newAdmin = new Administrator();
-
-
-        newAdmin.username = oldadmin.username
-        newAdmin.passwordHash = passwordHashString;
-
-        return this.administrator.save(newAdmin);
+        return this.administrator.save(admin);
     }
 
 }
