@@ -1,0 +1,47 @@
+[33mcommit 97d136eac28a9ba8943efe865c08b124c2914ff4[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Sun Feb 7 19:39:54 2021 +0100
+
+    Prosirivanje requesta tokenom, pocetak kreiranja role check guarda
+
+[33mcommit 445126310e6f17747a12b7d5cde563160402ca63[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Sun Feb 7 19:28:59 2021 +0100
+
+    GEt all users, user login, dodavanje role tokenu, prosirenje nekih crud ruta, user kontroler (editovanje usera), dodavanje role u dto JwtDataDto, user service
+
+[33mcommit ebe4de8716203889480a3b79f216f03b3a0f518a[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Sat Feb 6 21:56:35 2021 +0100
+
+    Kreiranje auth, event i event-type kontrolera, event i event-type  servisa, middleware-a i potrebnih dtos
+
+[33mcommit e7961b1d0abec7067b8af423fa0769c22831b3df[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Thu Feb 4 22:59:18 2021 +0100
+
+    Mala izmjena prethodnog komita, dodavanje ApiResponsa na greske pri odgovoru servera
+
+[33mcommit 1b6933c882430ce4ab34517dd1443dd6ef2741da[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Thu Feb 4 21:53:50 2021 +0100
+
+    Implementacija  Administrator kontrolera i servisa (get svih, jednog, add i edit ) , svih entiteta, dto admin
+
+[33mcommit 517f61cd002f29be630bcfd71dc4475876fa14d9[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Wed Feb 3 18:26:56 2021 +0100
+
+    Kreiranje  Administrator kontrolera, servisa i entiteta
+
+[33mcommit 8050b092df46860cd1481fc4d1114c40c9f4af32[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Wed Feb 3 14:11:56 2021 +0100
+
+    Created administrator service and controller
+
+[33mcommit 5ced57366406638d19591d35071adf08d2539120[m
+Author: jovanpuhalo <jovan.puhalo86@gmail.com>
+Date:   Wed Feb 3 00:43:45 2021 +0100
+
+    Proba 1

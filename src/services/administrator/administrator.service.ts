@@ -23,9 +23,9 @@ export class AdministratorService {
         return this.administrator.find();
     }
 
-    // getAllUsers(): Promise<User[]> {
-    //     return this.user.find();
-    // }
+    getAllUsers(): Promise<User[]> {
+        return this.user.find();
+    }
 
     getById(id: number): Promise<Administrator | ApiResponse> {
         return new Promise(async (resolve) => {
