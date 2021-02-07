@@ -68,6 +68,7 @@ export class AuthMiddleware implements NestMiddleware {
 
         //ZNA DA JE TOKEN ISTEKAO I BZ OVE PROVJERE , NE ZNAM KAKO
 
+        req.token = jwtData;
 
         next();
     }
