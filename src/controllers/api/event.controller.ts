@@ -1,4 +1,4 @@
-import { Body, Controller, Put } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { AddEventDto } from "src/dtos/event/add.event.dto";
 import { Event } from "src/entities/event.entity";
@@ -30,7 +30,9 @@ import { EventService } from "src/services/event/event.service";
     routes: {
         only: [
             'getOneBase',
-            'getManyBase'
+            'getManyBase',
+            "updateOneBase",
+            "deleteOneBase"
         ],
     }
 })
@@ -41,7 +43,7 @@ export class EventController {
         public service: EventService
     ) { }
 
-    @Put('/createEvent')
+    @Post('/createEvent')
     createEvent(@Body() data: AddEventDto) {
         return this.service.createEvent(data);
     }

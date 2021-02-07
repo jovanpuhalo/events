@@ -1,6 +1,7 @@
 export class JwtDataDto {
 
-    administratorId: number;
+    role: "administrator" | "user";
+    id: number;
     username: string;
     exp: number; //UNIX TIMESTAMP
     ip: string;
@@ -8,7 +9,8 @@ export class JwtDataDto {
 
     toPlainObject() {
         return {
-            id: this.administratorId,
+            role: this.role,
+            id: this.id,
             username: this.username,
             exp: this.exp,
             ua: this.ua,

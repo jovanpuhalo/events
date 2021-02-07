@@ -20,6 +20,15 @@ import { EventTypeService } from "src/services/event-type/event.type.service";
                 eager: false
             }
         }
+    },
+    routes: {
+        only: [
+            'getOneBase',
+            'getManyBase',
+            "createOneBase",
+            "deleteOneBase",
+            "updateOneBase"
+        ],
     }
 })
 

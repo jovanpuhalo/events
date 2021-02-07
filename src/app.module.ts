@@ -18,6 +18,8 @@ import { EventController } from './controllers/api/event.controller';
 import { EventService } from './services/event/event.service';
 import { AuthController } from './controllers/api/auth.controller';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { UserService } from './services/user/user.service';
+import { UserController } from './controllers/api/user.controller';
 
 @Module({
   imports: [
@@ -56,13 +58,15 @@ import { AuthMiddleware } from './middleware/auth.middleware';
     AdministratorController,
     EventTypeController,
     EventController,
-    AuthController
+    AuthController,
+    UserController
   ],
   providers: [
     AppService,
     AdministratorService,
     EventTypeService,
-    EventService
+    EventService,
+    UserService
   ],
 })
 export class AppModule implements NestModule {

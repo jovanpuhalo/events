@@ -6,18 +6,26 @@ import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { EditAdministratorDto } from 'src/dtos/administrator/edit.administrator.dto';
 import { ApiResponse } from 'src/misc/apiResponse';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class AdministratorService {
     constructor(
         @InjectRepository(Administrator)
-        private readonly administrator: Repository<Administrator>
+        private readonly administrator: Repository<Administrator>,
+        @InjectRepository(User)
+        private readonly user: Repository<User>
+
     ) { }
 
     getAll(): Promise<Administrator[]> {
 
         return this.administrator.find();
     }
+
+    // getAllUsers(): Promise<User[]> {
+    //     return this.user.find();
+    // }
 
     getById(id: number): Promise<Administrator | ApiResponse> {
         return new Promise(async (resolve) => {
@@ -44,7 +52,7 @@ export class AdministratorService {
     }
 
 
-    add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
+    createAdministrator(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
         const crypto = require('crypto');
 
         const passwordHash = crypto.createHash('sha512');

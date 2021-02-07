@@ -2,14 +2,17 @@ import { HttpException, HttpStatus, Injectable, NestMiddleware } from "@nestjs/c
 import { NextFunction, Request, Response } from "express";
 import * as jwt from 'jsonwebtoken'
 import { jwtSecret } from "src/config/jwt.secret";
-import { JwtDataDto } from "src/dtos/administrator/jwt.data.dto";
+import { JwtDataDto } from "src/dtos/auth.dto.ts/jwt.data.dto";
 import { AdministratorService } from "src/services/administrator/administrator.service";
+import { UserService } from "src/services/user/user.service";
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
 
     constructor(
-        private readonly administratorService: AdministratorService
+        private readonly administratorService: AdministratorService,
+        private readonly userService: UserService
+
     ) { }
     async use(req: Request, res: Response, next: NextFunction) {
         if (!req.headers.authorization) {
@@ -43,15 +46,27 @@ export class AuthMiddleware implements NestMiddleware {
             throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
         }
 
-        const administrator = await this.administratorService.getById(jwtData.administratorId)
-        if (!administrator) {
-            throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
+        if (jwtData.role === "administrator") {
+
+            const administrator = await this.administratorService.getById(jwtData.id)
+            if (!administrator) {
+                throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
+            }
+        }
+        if (jwtData.role === "user") {
+
+            const administrator = await this.userService.getById(jwtData.id)
+            if (!administrator) {
+                throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
+            }
         }
 
         // const curentTimestamp = new Date().getDate() / 1000
         // if (curentTimestamp >= jwtData.exp) {
         //     throw new HttpException('Token expired please login ', HttpStatus.UNAUTHORIZED);
         // }
+
+        //ZNA DA JE TOKEN ISTEKAO I BZ OVE PROVJERE , NE ZNAM KAKO
 
 
         next();
