@@ -1,6 +1,8 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { EventType } from "src/entities/event-type.entity";
+import { AllowToRoles } from "src/misc/alow.to.roles.desriptor";
+import { RoleCheckGuard } from "src/misc/role.check.guard";
 import { EventTypeService } from "src/services/event-type/event.type.service";
 
 @Crud({
@@ -29,6 +31,36 @@ import { EventTypeService } from "src/services/event-type/event.type.service";
             "deleteOneBase",
             "updateOneBase"
         ],
+        getOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator', 'user')
+            ]
+        },
+        getManyBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator', 'user')
+            ]
+        },
+        createOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator')
+            ]
+        },
+        deleteOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator')
+            ]
+        },
+        updateOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator')
+            ]
+        },
     }
 })
 

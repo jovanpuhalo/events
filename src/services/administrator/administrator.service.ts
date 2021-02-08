@@ -20,7 +20,12 @@ export class AdministratorService {
 
     getAll(): Promise<Administrator[]> {
 
-        return this.administrator.find();
+        return this.administrator.find(
+            {
+                select: ["administratorId", "username"],
+                relations: ["events"]
+            }
+        );
     }
 
     getAllUsers(): Promise<User[]> {
@@ -29,7 +34,11 @@ export class AdministratorService {
 
     getById(id: number): Promise<Administrator | ApiResponse> {
         return new Promise(async (resolve) => {
-            let admin = await this.administrator.findOne(id)
+            let admin = await this.administrator.findOne(id, {
+                relations: [
+                    "events"
+                ]
+            })
             if (admin == undefined) {
                 resolve(new ApiResponse("error", -1002, "Can't find admin with that id"))
             }

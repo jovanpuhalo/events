@@ -1,8 +1,10 @@
-import { Body, Controller, Param, Patch } from "@nestjs/common";
+import { Body, Controller, Param, Patch, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { EditUserDto } from "src/dtos/user/edit.user.dto";
 import { User } from "src/entities/user.entity";
+import { AllowToRoles } from "src/misc/alow.to.roles.desriptor";
 import { ApiResponse } from "src/misc/apiResponse";
+import { RoleCheckGuard } from "src/misc/role.check.guard";
 import { UserService } from "src/services/user/user.service";
 
 @Crud({
@@ -27,11 +29,36 @@ import { UserService } from "src/services/user/user.service";
         only: [
             "getOneBase",
             "getManyBase",
-            "updateOneBase"
+            "updateOneBase",
+            "deleteOneBase"
 
-        ]
+        ],
+        getOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator')
+            ]
+        },
+        getManyBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator')
+            ]
+        },
+        updateOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('user')
+            ]
+        },
+        deleteOneBase: {
+            decorators: [
+                UseGuards(RoleCheckGuard),
+                AllowToRoles('administrator')
+            ]
+        },
+    },
 
-    }
 
 })
 
@@ -43,6 +70,8 @@ export class UserController {
     ) { }
 
     @Patch(':id')
+    @UseGuards(RoleCheckGuard)
+    @AllowToRoles('user')
     editUser(@Body() data: EditUserDto, @Param('id') id): Promise<User | ApiResponse> {
         return this.service.editUserById(id, data);
     }

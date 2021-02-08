@@ -1,4 +1,5 @@
 import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Administrator } from "./administrator.entity";
 import { EventType } from "./event-type.entity";
 import { User } from "./user.entity";
 
@@ -47,5 +48,13 @@ export class Event {
         inverseJoinColumn: { name: "user_id", referencedColumnName: "userId" }
     })
     users: User[];
+
+    @ManyToMany(type => Administrator, administrator => administrator.events)
+    @JoinTable({
+        name: "administrator_events",
+        joinColumn: { name: "event_id", referencedColumnName: "eventId" },
+        inverseJoinColumn: { name: "administrator_id", referencedColumnName: "administratorId" }
+    })
+    administrators: Administrator[];
 
 }
