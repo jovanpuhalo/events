@@ -55,8 +55,8 @@ export class AuthMiddleware implements NestMiddleware {
         }
         if (jwtData.role === "user") {
 
-            const administrator = await this.userService.getById(jwtData.id)
-            if (!administrator) {
+            const user = await this.userService.getById(jwtData.id)
+            if (!user) {
                 throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
             }
         }

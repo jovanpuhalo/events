@@ -13,7 +13,7 @@ export class RoleCheckGuard implements CanActivate {
         const role = req.token.role;
 
         const allowedToRoles = this.reflector
-            .get<("administrator" | "user")[]>('allow_to_roles', context.getHandler());
+            .get<("administrator" | "user" | "visitor")[]>('allow_to_roles', context.getHandler());
 
         if (!allowedToRoles.includes(role)) {
             return false;

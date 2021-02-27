@@ -23,7 +23,15 @@ export class UserService extends TypeOrmCrudService<User> {
 
     getById(id: number): Promise<User | ApiResponse> {
         return new Promise(async (resolve) => {
-            let user = await this.user.findOne(id)
+            let user = await this.user.findOne(id, {
+                relations: [
+                    "userEvents",
+                    "events",
+
+                ],
+
+            })
+
             if (user == undefined) {
                 resolve(new ApiResponse("error", -2002, "Can't find user with that id"))
             }
@@ -31,6 +39,11 @@ export class UserService extends TypeOrmCrudService<User> {
         })
 
     }
+
+
+
+
+
 
     async getByUsername(username: string): Promise<User | null> {
         let user: User = await this.user.findOne({
@@ -102,6 +115,8 @@ export class UserService extends TypeOrmCrudService<User> {
 
     async editUserById(id: number, data: EditUserDto): Promise<User | ApiResponse> {
         let user: User = await this.user.findOne(id)
+        console.log("Usao u metod");
+
         if (user === undefined) {
             return new Promise(resolve => {
                 resolve(new ApiResponse("error", -2002, "Can't find that user"));

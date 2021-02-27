@@ -19,7 +19,7 @@ import { EventTypeService } from "src/services/event-type/event.type.service";
     query: {
         join: {
             events: {
-                eager: false
+                eager: true
             }
         }
     },
@@ -39,8 +39,8 @@ import { EventTypeService } from "src/services/event-type/event.type.service";
         },
         getManyBase: {
             decorators: [
-                UseGuards(RoleCheckGuard),
-                AllowToRoles('administrator', 'user')
+                // UseGuards(RoleCheckGuard),
+                // AllowToRoles('administrator', 'user', 'visitor')
             ]
         },
         createOneBase: {

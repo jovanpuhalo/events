@@ -1,7 +1,8 @@
-import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Administrator } from "./administrator.entity";
 import { EventType } from "./event-type.entity";
 import { User } from "./user.entity";
+import { UserEvent } from "./user_event.entity";
 
 @Index("fk_event_event_type_id", ["eventTypeId"], {})
 @Entity("event")
@@ -34,12 +35,20 @@ export class Event {
     })
     status: "Scheduled" | "In progress" | "Closed";
 
+
+
+    // @OneToMany(() => UserEvent, (userEvent) => userEvent.event)
+    // userEvents: UserEvent[];
+
+
     @ManyToOne(() => EventType, (eventType) => eventType.events, {
         onDelete: "NO ACTION",
         onUpdate: "CASCADE",
     })
     @JoinColumn([{ name: "event_type_id", referencedColumnName: "eventTypeId" }])
     eventType: EventType;
+
+
 
     @ManyToMany(type => User, user => user.events)
     @JoinTable({
@@ -48,6 +57,7 @@ export class Event {
         inverseJoinColumn: { name: "user_id", referencedColumnName: "userId" }
     })
     users: User[];
+
 
     @ManyToMany(type => Administrator, administrator => administrator.events)
     @JoinTable({

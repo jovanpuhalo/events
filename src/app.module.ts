@@ -20,6 +20,7 @@ import { AuthController } from './controllers/api/auth.controller';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { UserService } from './services/user/user.service';
 import { UserController } from './controllers/api/user.controller';
+import { UserEventService } from './services/UserEvent/User.Event.service';
 
 @Module({
   imports: [
@@ -66,14 +67,15 @@ import { UserController } from './controllers/api/user.controller';
     AdministratorService,
     EventTypeService,
     EventService,
-    UserService
+    UserService,
+    UserEventService
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .exclude('auth/*')
+      .exclude('auth/*', 'api/eventType')
       .forRoutes('api/*')
   }
 
