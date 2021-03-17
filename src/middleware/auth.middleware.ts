@@ -28,12 +28,13 @@ export class AuthMiddleware implements NestMiddleware {
         }
         const tokenString = tokenParts[1];
 
+
         let jwtData: JwtDataDto;
         try {
             jwtData = jwt.verify(tokenString, jwtSecret);
 
         } catch (e) {
-            throw new HttpException('Bad tokennnnnnnn found', HttpStatus.UNAUTHORIZED);
+            throw new HttpException('Bad tokennnnnnnnt found', HttpStatus.UNAUTHORIZED);
 
         }
 

@@ -33,12 +33,15 @@ export class AdministratorService {
     }
 
     getById(id: number): Promise<Administrator | ApiResponse> {
+
         return new Promise(async (resolve) => {
             let admin = await this.administrator.findOne(id, {
                 relations: [
+                    "administratorEvents",
                     "events"
                 ]
             })
+
             if (admin == undefined) {
                 resolve(new ApiResponse("error", -1002, "Can't find admin with that id"))
             }

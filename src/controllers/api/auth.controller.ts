@@ -11,7 +11,6 @@ import { LoginUserDto } from "src/dtos/user/user.login.dto";
 import { UserService } from "src/services/user/user.service";
 import { User } from "src/entities/user.entity";
 import { AddUserDto } from "src/dtos/user/add.user.dto";
-import { TokenDto } from "src/dtos/TokenDto";
 
 @Controller('auth')
 export class AuthController {
@@ -65,12 +64,15 @@ export class AuthController {
     @Post('user/login')
     async userLogin(@Body() data: LoginUserDto, @Req() req: Request): Promise<LoginInfoDto | ApiResponse> {
 
-        // console.log("ulogovan " + data.username);
 
         const user: User = await this.userService.getByUsername(data.username);
 
         if (!user) {
             return new Promise(resolve => resolve(new ApiResponse('error', -4001, "Can't find user with that username")))
+        }
+        if (user.validation === '1') {
+
+            return new Promise(resolve => resolve(new ApiResponse('error', -4003, "User is not valid")))
         }
 
         const crypto = require('crypto');
@@ -111,28 +113,28 @@ export class AuthController {
     }
 
 
-    @Post('user/userId')
-    async getUserIdByToken(@Body() token: TokenDto) {
+    // @Post('user/userId')
+    // async getUserIdByToken(@Body() token: TokenDto) {
 
 
-        let jwtData: JwtDataDto;
-        try {
-            jwtData = jwt.verify(token.token, jwtSecret);
+    //     let jwtData: JwtDataDto;
+    //     try {
+    //         jwtData = jwt.verify(token.token, jwtSecret);
 
 
-        } catch (e) {
-            throw new HttpException('Bad tokennnnnnnnt found', HttpStatus.UNAUTHORIZED);
+    //     } catch (e) {
+    //         throw new HttpException('Bad tokennnnnnnnt found', HttpStatus.UNAUTHORIZED);
 
-        }
+    //     }
 
-        if (jwtData.role === "user") {
-            const user = await this.userService.getById(jwtData.id)
-            if (!user) {
-                throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
-            }
-        }
+    //     if (jwtData.role === "user") {
+    //         const user = await this.userService.getById(jwtData.id)
+    //         if (!user) {
+    //             throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
+    //         }
+    //     }
 
 
-        return jwtData.id;
-    }
+    //     return jwtData.id;
+    // }
 }

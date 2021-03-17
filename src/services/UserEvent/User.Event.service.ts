@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
-import { SubscribedDto } from "src/dtos/user-event/SubscribedDto";
+import { UserSubscribedDto } from "src/dtos/user-event/UserSubscribedDto";
 import { UserEvent } from "src/entities/user_event.entity";
 import { ApiResponse } from "src/misc/apiResponse";
 import { Repository } from "typeorm";
@@ -21,7 +21,7 @@ export class UserEventService extends TypeOrmCrudService<UserEvent>{
         return await this.userEvent.delete(id)
     }
 
-    async subscribe(data: SubscribedDto) {
+    async subscribe(data: UserSubscribedDto) {
         let newUserEvent: UserEvent = new UserEvent();
         newUserEvent.userId = data.userId;
         newUserEvent.eventId = data.eventId;

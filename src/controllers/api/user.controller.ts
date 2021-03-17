@@ -82,7 +82,6 @@ export class UserController {
     @UseGuards(RoleCheckGuard)
     @AllowToRoles('user')
     editUser(@Body() data: EditUserDto, @Param('id') id: number): Promise<User | ApiResponse> {
-        console.log("usao u metod kontrolera");
 
         return this.service.editUserById(id, data);
     }
@@ -90,7 +89,7 @@ export class UserController {
     @Get('events/:id')
     @UseGuards(RoleCheckGuard)
     @AllowToRoles('user')
-    getAllEventsForUser(@Param('id') id): Promise<User | ApiResponse> {
+    getAllEventsForUser(@Param('id') id: number): Promise<User | ApiResponse> {
         return this.service.getById(id);
     }
 
@@ -105,19 +104,27 @@ export class UserController {
 
 
         } catch (e) {
-            throw new HttpException('Bad tokennnnnnnnt found', HttpStatus.UNAUTHORIZED);
+            throw new HttpException('Bad tokennnnnnnntt found', HttpStatus.UNAUTHORIZED);
 
         }
 
-        if (jwtData.role === "user") {
-            const user = await this.service.getById(jwtData.id)
-            if (!user) {
-                throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
-            }
-        }
+
         const user = await this.service.getById(jwtData.id)
+        if (!user) {
+            throw new HttpException('Acount not found', HttpStatus.UNAUTHORIZED);
+        }
+
+
 
         return user;
+
+    }
+
+    @Post('administrator/userOff')
+    @UseGuards(RoleCheckGuard)
+    @AllowToRoles('administrator')
+    async validationOf(@Body() userId: number) {
+        return this.service.validationOf(userId);
     }
 
 }

@@ -21,6 +21,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { UserService } from './services/user/user.service';
 import { UserController } from './controllers/api/user.controller';
 import { UserEventService } from './services/UserEvent/User.Event.service';
+import { AdministratorEvent } from './entities/administrator_event.entity';
+import { AdministratorEventService } from './services/AdministratorEvent/AdministratorEvent.service';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { UserEventService } from './services/UserEvent/User.Event.service';
       entities: [
         Administrator,
         AdministratorToken,
+        AdministratorEvent,
         EventType,
         Event,
         UserEvent,
@@ -43,7 +46,7 @@ import { UserEventService } from './services/UserEvent/User.Event.service';
     }),
     TypeOrmModule.forFeature([
       Administrator,
-      Administrator,
+      AdministratorEvent,
       AdministratorToken,
       EventType,
       Event,
@@ -68,7 +71,9 @@ import { UserEventService } from './services/UserEvent/User.Event.service';
     EventTypeService,
     EventService,
     UserService,
-    UserEventService
+    UserEventService,
+    AdministratorEventService
+
   ],
 })
 export class AppModule implements NestModule {

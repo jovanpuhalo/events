@@ -31,6 +31,13 @@ export class User {
     @Column({ type: "varchar", name: "address", length: 128 })
     address: string;
 
+    @Column({
+        type: "enum",
+        enum: ['0', '1'],
+        default: () => '0',
+    })
+    validation: '0' | '1';
+
     @ManyToMany(type => Event, event => event.users)
     @JoinTable({
         name: "user_events",

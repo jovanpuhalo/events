@@ -1,11 +1,13 @@
 import { Body, Controller, Delete, Param, Post, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
+import { AdminSubscribedDto } from "src/dtos/administrator-event/AdminSubscribedDto";
 import { AddEventDto } from "src/dtos/event/add.event.dto";
-import { SubscribedDto } from "src/dtos/user-event/SubscribedDto";
+import { UserSubscribedDto } from "src/dtos/user-event/UserSubscribedDto";
 import { Event } from "src/entities/event.entity";
 import { AllowToRoles } from "src/misc/alow.to.roles.desriptor";
 import { ApiResponse } from "src/misc/apiResponse";
 import { RoleCheckGuard } from "src/misc/role.check.guard";
+import { AdministratorEventService } from "src/services/AdministratorEvent/AdministratorEvent.service";
 import { EventService } from "src/services/event/event.service";
 import { UserEventService } from "src/services/UserEvent/User.Event.service";
 
@@ -19,7 +21,6 @@ import { UserEventService } from "src/services/UserEvent/User.Event.service";
             field: 'eventId',
             type: 'number',
             primary: true
-
         }
     },
     query: {
@@ -42,13 +43,14 @@ import { UserEventService } from "src/services/UserEvent/User.Event.service";
             'getOneBase',
             'getManyBase',
             "updateOneBase",
-            "deleteOneBase"
+            // "deleteOneBase"
         ],
         getOneBase: {
             decorators: [
                 UseGuards(RoleCheckGuard),
                 AllowToRoles('administrator', 'user')
-            ]
+            ],
+
 
         },
         getManyBase: {
@@ -63,12 +65,12 @@ import { UserEventService } from "src/services/UserEvent/User.Event.service";
                 AllowToRoles('administrator')
             ]
         },
-        deleteOneBase: {
-            decorators: [
-                UseGuards(RoleCheckGuard),
-                AllowToRoles('administrator')
-            ]
-        }
+        // deleteOneBase: {
+        //     decorators: [
+        //         UseGuards(RoleCheckGuard),
+        //         AllowToRoles('administrator')
+        //     ]
+        // }
     }
 
 })
@@ -77,8 +79,17 @@ import { UserEventService } from "src/services/UserEvent/User.Event.service";
 export class EventController {
     constructor(
         public service: EventService,
-        public userEventService: UserEventService
+        public userEventService: UserEventService,
+        public administratorEventService: AdministratorEventService,
     ) { }
+
+    @Delete(':eventId')
+    @UseGuards(RoleCheckGuard)
+    @AllowToRoles('administrator')
+    deleteEvent(
+        @Param('eventId') eventId: number,) {
+        return this.service.deleteEvent(eventId);
+    }
 
     @Post('/createEvent')
     @UseGuards(RoleCheckGuard)
@@ -87,13 +98,19 @@ export class EventController {
         return this.service.createEvent(data);
     }
 
-    @Post('/subscribe')
-    subscribeEvent(@Body() data: SubscribedDto) {
+    @Post('user/subscribe')
+    subscribeUserEvent(@Body() data: UserSubscribedDto) {
         return this.userEventService.subscribe(data);
     }
 
-    @Delete('unsubscribe/:userId/:eventId')
-    async unsubscribe(
+    @Post('admin/subscribe')
+    subscribeAdminEvent(@Body() data: AdminSubscribedDto) {
+
+        return this.administratorEventService.subscribe(data);
+    }
+
+    @Delete('/user/unsubscribe/:userId/:eventId')
+    async userUnsubscribe(
         @Param('userId') userId: number,
         @Param('eventId') eventId: number) {
 
@@ -107,6 +124,23 @@ export class EventController {
         }
 
         return await this.userEventService.deleteById(eventUser.userEventId);
+    }
+    @Delete('/administrator/unsubscribe/:adminId/:eventId')
+    async adminUnsubscribe(
+        @Param('adminId') adminId: number,
+        @Param('eventId') eventId: number) {
+
+
+        const eventAdministrator = await this.administratorEventService.findOne({
+            administratorId: adminId,
+            eventId: eventId
+        });
+
+        if (!eventAdministrator) {
+            return new ApiResponse('error', -4004, 'Subscrubed event not found')
+        }
+
+        return await this.administratorEventService.deleteById(eventAdministrator.administratorEventId);
     }
 
 }

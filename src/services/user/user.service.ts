@@ -31,10 +31,11 @@ export class UserService extends TypeOrmCrudService<User> {
                 ],
 
             })
-
             if (user == undefined) {
                 resolve(new ApiResponse("error", -2002, "Can't find user with that id"))
             }
+
+
             resolve(user);
         })
 
@@ -76,6 +77,7 @@ export class UserService extends TypeOrmCrudService<User> {
         newUser.email = data.email;
         newUser.phoneNumber = data.phoneNumber;
         newUser.address = data.address;
+        newUser.validation = '0';
 
         try {
             const savedUser = await this.user.save(newUser)
@@ -113,9 +115,28 @@ export class UserService extends TypeOrmCrudService<User> {
 
     }
 
+    async validationOf(id: number): Promise<User | ApiResponse> {
+        let user: User = await this.user.findOne(id)
+
+        if (user === undefined) {
+            return new Promise(resolve => {
+                resolve(new ApiResponse("error", -2002, "Can't find that user"));
+            });
+        }
+        if (user.validation === '0') {
+            user.validation = '1';
+            return this.user.save(user);
+        }
+
+
+        if (user.validation === '1') {
+            user.validation = '0';
+            return this.user.save(user);
+        }
+    }
+
     async editUserById(id: number, data: EditUserDto): Promise<User | ApiResponse> {
         let user: User = await this.user.findOne(id)
-        console.log("Usao u metod");
 
         if (user === undefined) {
             return new Promise(resolve => {

@@ -1,10 +1,13 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { EventType } from "src/entities/event-type.entity";
+import { Event } from "src/entities/event.entity";
 import { AllowToRoles } from "src/misc/alow.to.roles.desriptor";
 import { RoleCheckGuard } from "src/misc/role.check.guard";
 import { EventTypeService } from "src/services/event-type/event.type.service";
 
+
+@Controller('api/eventType/')
 @Crud({
     model: {
         type: EventType
@@ -25,36 +28,36 @@ import { EventTypeService } from "src/services/event-type/event.type.service";
     },
     routes: {
         only: [
-            'getOneBase',
+            // 'getOneBase',
             'getManyBase',
-            "createOneBase",
+            // "createOneBase",
             "deleteOneBase",
             "updateOneBase"
         ],
-        getOneBase: {
-            decorators: [
-                UseGuards(RoleCheckGuard),
-                AllowToRoles('administrator', 'user')
-            ]
-        },
+        // getOneBase: {
+        //     decorators: [
+        //         UseGuards(RoleCheckGuard),
+        //         AllowToRoles('administrator', 'user')
+        //     ]
+        // },
         getManyBase: {
             decorators: [
                 // UseGuards(RoleCheckGuard),
-                // AllowToRoles('administrator', 'user', 'visitor')
+                // AllowToRoles('administrator', 'user')
             ]
         },
-        createOneBase: {
-            decorators: [
-                UseGuards(RoleCheckGuard),
-                AllowToRoles('administrator')
-            ]
-        },
-        deleteOneBase: {
-            decorators: [
-                UseGuards(RoleCheckGuard),
-                AllowToRoles('administrator')
-            ]
-        },
+        // createOneBase: {
+        //     decorators: [
+        //         UseGuards(RoleCheckGuard),
+        //         AllowToRoles('administrator')
+        //     ]
+        // },
+        // deleteOneBase: {
+        //     decorators: [
+        //         UseGuards(RoleCheckGuard),
+        //         AllowToRoles('administrator')
+        //     ]
+        // },
         updateOneBase: {
             decorators: [
                 UseGuards(RoleCheckGuard),
@@ -65,7 +68,6 @@ import { EventTypeService } from "src/services/event-type/event.type.service";
 })
 
 
-@Controller('api/eventType')
 export class EventTypeController {
 
     constructor(
@@ -77,5 +79,27 @@ export class EventTypeController {
     // getAll(): Promise<EventType[]> {
     //     return this.eventTypeService.getAll();
     // }
+
+    @Post('add')
+    @UseGuards(RoleCheckGuard)
+    @AllowToRoles('administrator')
+    createEvent(@Body() data: { name: string }) {
+        return this.service.createEventType(data);
+    }
+
+    @Delete(':eventTypeId')
+    @UseGuards(RoleCheckGuard)
+    @AllowToRoles('administrator')
+    deleteEvent(
+        @Param('eventTypeId') eventTypeId: number,) {
+        return this.service.deleteEventType(eventTypeId);
+    }
+
+    @Get(':eventTypeId')
+
+    getEvents(
+        @Param('eventTypeId') eventTypeId: number): Promise<EventType> {
+        return this.service.getEvents(eventTypeId);
+    }
 
 }
