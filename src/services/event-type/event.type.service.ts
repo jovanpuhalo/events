@@ -5,6 +5,7 @@ import { AdministratorEvent } from "src/entities/administrator_event.entity";
 import { EventType } from "src/entities/event-type.entity";
 import { Event } from "src/entities/event.entity";
 import { UserEvent } from "src/entities/user_event.entity";
+import { ApiResponse } from "src/misc/apiResponse";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -29,7 +30,12 @@ export class EventTypeService extends TypeOrmCrudService<EventType>{
     //     return this.eventTypeService.find();
     // }
 
-    async createEventType(data: { name: string }): Promise<EventType> {
+    async createEventType(data: { name: string }): Promise<EventType | ApiResponse> {
+
+        if (data.name === '') {
+            return new ApiResponse("error", -3005, "You have to write the name of event type!")
+        }
+
         let eventType: EventType = new EventType();
 
         eventType.name = data.name;
@@ -38,6 +44,8 @@ export class EventTypeService extends TypeOrmCrudService<EventType>{
         return this.eventType.findOne(savedEventType.eventTypeId);
 
     }
+
+
     async getEvents(id: number): Promise<EventType> {
         const event = await this.eventType.findOne(id, {
             relations: [

@@ -87,7 +87,6 @@ export class UserService extends TypeOrmCrudService<User> {
             }
             return savedUser;
         } catch (e) {
-            console.log(e.sqlMessage);
 
             if (e.sqlMessage.includes('user.uq_user_email')) {
                 return new ApiResponse('error', -6002, 'User sa ovim emailom vec postoji');

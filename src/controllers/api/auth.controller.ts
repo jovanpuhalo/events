@@ -23,6 +23,7 @@ export class AuthController {
     @Post('administrator/login')
     async administratorLogin(@Body() data: LoginAdministratorDto, @Req() req: Request): Promise<LoginInfoDto | ApiResponse> {
         const administrator = await this.administratorService.getByUsername(data.username);
+        console.log("udjoh da se ulogujem");
 
         if (!administrator) {
             return new ApiResponse("error", -3001, "There is no administrator with that username")

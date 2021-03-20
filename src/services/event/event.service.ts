@@ -68,6 +68,7 @@ export class EventService extends TypeOrmCrudService<Event>{
         newEvent.end = data.end;
         newEvent.location = data.location;
         newEvent.status = data.status;
+        console.log(newEvent);
 
 
         let savedEvent = await this.eventService.save(newEvent)

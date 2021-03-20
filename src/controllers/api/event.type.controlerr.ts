@@ -3,6 +3,7 @@ import { Crud } from "@nestjsx/crud";
 import { EventType } from "src/entities/event-type.entity";
 import { Event } from "src/entities/event.entity";
 import { AllowToRoles } from "src/misc/alow.to.roles.desriptor";
+import { ApiResponse } from "src/misc/apiResponse";
 import { RoleCheckGuard } from "src/misc/role.check.guard";
 import { EventTypeService } from "src/services/event-type/event.type.service";
 
@@ -83,7 +84,9 @@ export class EventTypeController {
     @Post('add')
     @UseGuards(RoleCheckGuard)
     @AllowToRoles('administrator')
-    createEvent(@Body() data: { name: string }) {
+    createEvent(@Body() data: { name: string }): Promise<EventType | ApiResponse> {
+
+
         return this.service.createEventType(data);
     }
 
